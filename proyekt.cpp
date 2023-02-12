@@ -22,6 +22,7 @@ void swapellowka(int* a) {
 int main()
 {
 	int massiv[] = {1,2,3,4,5,6,7,8,9,10};
+	int a;
 	swapellowka(massiv);
 	for (int i = 0; i < 10; i++) {
 		cout << massiv[i] << endl;
@@ -30,6 +31,7 @@ int main()
 }
 
 // Tips for Getting Started: 
+ 
 //   1. Use the Solution Explorer window to add/manage files
 //   2. Use the Team Explorer window to connect to source control
 //   3. Use the Output window to see build output and other messages
