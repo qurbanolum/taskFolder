@@ -21,6 +21,9 @@
     <ClCompile Include="peregrujenieFunkcii.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="chernovik.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
