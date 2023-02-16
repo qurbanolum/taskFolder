@@ -24,6 +24,12 @@
     <ClCompile Include="chernovik.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NOD.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BikiKorovi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
