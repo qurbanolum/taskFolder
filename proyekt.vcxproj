@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClCompile Include="BikiKorovi.cpp" />
     <ClCompile Include="chernovik.cpp" />
+    <ClCompile Include="MinSet.cpp" />
     <ClCompile Include="NOD.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
