@@ -8,11 +8,10 @@ using namespace std;
 
 int SAYZ;
 int* dynMas;
-int memory() {
+void memory() {
 	cout << "Vvedite razmer massiva:";
 	cin >> SAYZ;
 	dynMas = new int[SAYZ];
-	return *dynMas;
 }
 
 void initialize() {
