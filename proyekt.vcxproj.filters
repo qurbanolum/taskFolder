@@ -36,6 +36,9 @@
     <ClCompile Include="DynamicMassiv.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UkazProstie.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
