@@ -148,6 +148,7 @@
     </ClCompile>
     <ClCompile Include="peregrujenieFunkcii.cpp" />
     <ClCompile Include="UkazProstie.cpp" />
+    <ClCompile Include="UkazRaznie.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
