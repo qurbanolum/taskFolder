@@ -138,6 +138,7 @@
     <ClCompile Include="BikiKorovi.cpp" />
     <ClCompile Include="chernovik.cpp" />
     <ClCompile Include="DynamicMassiv.cpp" />
+    <ClCompile Include="MaxMinAvg.cpp" />
     <ClCompile Include="MinSet.cpp" />
     <ClCompile Include="NOD.cpp" />
     <ClCompile Include="pch.cpp">
