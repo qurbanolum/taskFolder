@@ -12,8 +12,8 @@ const int mapWidth = 60;
 const int mapHeight = 30;
 int mapSize[mapHeight][mapWidth];
 //Snake parameters
-int snakeXpos;
-int snakeYpos;
+int snakeXpos[mapWidth * mapHeight];
+int snakeYpos[mapWidth * mapHeight];
 int snakeMoveDirection;
 int snakeSize = 3;
 int snakeSpeed = 300;
@@ -49,8 +49,12 @@ void deleteFood() {
 }
 
 void initMap() {
-	snakeXpos = 15;
-	snakeYpos = 30;
+	snakeXpos[0] = 15;
+	snakeYpos[0] = 30;
+	snakeXpos[1] = 15;
+	snakeYpos[1] = 31;
+	snakeXpos[2] = 15;
+	snakeYpos[2] = 32;
 	for (int i = 0; i < mapHeight; i++) {
 		for (int k = 0; k < mapWidth; k++) {
 			if (i == 0 || i == mapHeight - 1) {
@@ -64,7 +68,10 @@ void initMap() {
 			}
 		}
 	}
-	mapSize[snakeXpos][snakeYpos] = 1;
+	for (int i = 0; i < snakeSize; i++){
+		mapSize[snakeXpos[i]][snakeYpos[i]] = 1;
+	}
+	
 	initFood();
 }
 
@@ -89,17 +96,17 @@ void showMap() {
 }
 
 void snakeMove(int xDirection, int yDirection) {
-	int newSnakeXpos = snakeXpos + xDirection;
-	int newSnakeYpos = snakeYpos + yDirection;
-	if (mapSize[newSnakeXpos][newSnakeYpos] == -2) {
-		deleteFood();
-		snakeScore += 100;
-		snakeSize++;
-		snakeSpeed = snakeSpeed > 100 ? snakeSpeed - 50 : snakeSpeed;
+	int tailX;
+	int tailY;
+	tailX = snakeXpos[snakeSize - 1];
+	tailY = snakeYpos[snakeSize - 1];
+	for (int i = 1; i < snakeSize; i++) {
+		snakeXpos[snakeSize - i] = snakeXpos[snakeSize - (i + 1)];
+		snakeYpos[snakeSize - i] = snakeYpos[snakeSize - (i + 1)];
 	}
-	else if (mapSize[newSnakeXpos][newSnakeYpos] != 0) {
-		snakeIsAlive = false;
-	}
+	snakeXpos[0] = snakeXpos[0] + xDirection;
+	snakeYpos[0] = snakeYpos[0] + yDirection;
+
 	timeForFood += snakeSpeed;
 	if ((timeForFood % 10000) == 0) {
 		initFood();
@@ -107,9 +114,23 @@ void snakeMove(int xDirection, int yDirection) {
 	else if (((timeForFood % 7000) == 0)) {
 		deleteFood();
 	}
-	snakeXpos = newSnakeXpos;
-	snakeYpos = newSnakeYpos;
-	mapSize[snakeXpos][snakeYpos] = 1;
+
+	if (mapSize[snakeXpos[0]][snakeYpos[0]] == -2) {
+		deleteFood();
+		snakeScore += 100;
+		snakeSize++;
+		snakeSpeed = snakeSpeed > 50 ? snakeSpeed - 50 : snakeSpeed;
+	}
+	else if (mapSize[snakeXpos[0]][snakeYpos[0]] != 0) {
+		snakeIsAlive = false;
+	}
+
+	
+	for (int i = 0; i < snakeSize; i++) {
+		mapSize[snakeXpos[i]][snakeYpos[i]] = 1;
+	}
+	mapSize[tailX][tailY] = 0;
+	
 }
 
 void changeDirection(char button) {
@@ -156,7 +177,7 @@ void addLeader(int score) {
 }
 
 void game() {
-	
+	snakeSpeed = 300;
 	initMap();
 	snakeIsAlive = true;
 	while (snakeIsAlive) {
