@@ -45,6 +45,9 @@
     <ClCompile Include="MaxMinAvg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="zmeya.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
