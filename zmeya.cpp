@@ -22,8 +22,9 @@ int snakeScore = 0;
 int leaderBoard[5] = {};
 int timeForFood = 0;
 char mainMenu();
+
 void cleanScreen() {
-	system("cls");
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),{0,0});
 }
 
 void initFood() {
