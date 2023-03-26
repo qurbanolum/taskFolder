@@ -137,15 +137,23 @@ void snakeMove(int xDirection, int yDirection) {
 void changeDirection(char button) {
 	switch (button) {
 	case 'w':
+	case 'W':
+	case 72:
 		snakeMoveDirection = 1;
 		break;
 	case 'd':
+	case 'D':
+	case 77:
 		snakeMoveDirection = 2;
 		break;
 	case 's':
+	case 'S':
+	case 80:
 		snakeMoveDirection = 3;
 		break;
 	case 'a':
+	case 'A':
+	case 75:
 		snakeMoveDirection = 4;
 		break;
 	}
@@ -168,17 +176,72 @@ void updateGame() {
 	}
 }
 
+void writeLeaderboard(int leaderboard[5]) {
+	FILE* file = fopen("leaderboard.txt", "w");
+	if (file == NULL) {
+		printf("Error opening file.\n");
+		return;
+	}
+	for (int i = 0; i < 5; i++) {
+		fprintf(file, "%d\n", leaderboard[i]);
+	}
+	fclose(file);
+}
+
+void showLeaderBoard() {
+	for (int i = 0; i < 5; i++) {
+		cout << i + 1 << ":" << leaderBoard[i] << endl;
+	}
+	system("pause");
+	mainMenu();
+}
+void readLeaderboard(int leaderboard[5]) {
+	FILE* file = fopen("leaderboard.txt", "r");
+	if (file == NULL) {
+		printf("Error opening file.\n");
+		return;
+	}
+	for (int i = 0; i < 5; i++) {
+		fscanf(file, "%d", &leaderboard[i]);
+	}
+	fclose(file);
+}
+
 void addLeader(int score) {
 	for (int i = 0; i < 5; i++) {
-		if (leaderBoard[i] < score) {
+		if (leaderBoard[i] == 0) {
 			leaderBoard[i] = score;
 			break;
 		}
 	}
+	for (int i = 0; i < 5; i++) {
+		for (int j = i + 1; j < 5; j++) {
+			if (leaderBoard[i] < leaderBoard[j]) {
+				int temp = leaderBoard[i];
+				leaderBoard[i] = leaderBoard[j];
+				leaderBoard[j] = temp;
+			}
+		}
+	}
+	writeLeaderboard(leaderBoard);
 }
 
 void game() {
-	snakeSpeed = 300;
+	cout << "Select dificulty:" << endl;
+	cout << "1:Easy" << endl << "2:Normal" << endl << "3:Hard" << endl;
+	int choice;
+	cin >> choice;
+
+	switch (choice){ 
+	case 1: snakeSpeed = 300; 
+			break; 
+	case 2:	snakeSpeed = 200;
+			break;
+	case 3:	snakeSpeed = 100;
+			break;
+	default: snakeSpeed = 300;
+	}
+		
 	initMap();
 	snakeIsAlive = true;
 	while (snakeIsAlive) {
@@ -194,20 +257,20 @@ void game() {
 	mainMenu();
 }
 
-void showLeaderBoard() {
-	for (int i = 0; i < 5; i++) {
-		cout << i + 1 << ":" << leaderBoard[i] << endl;
-	}
-	system("pause");
-}
+
 
 char mainMenu() {
+	readLeaderboard(leaderBoard);
 	cout << "Press N to New Game." << endl << "Press L to Leader Board." << endl << "Press X to Exit" << endl;
 	char choice;
 	choice = _getch();
-	if (choice == 'n') game();
-	else if (choice == 'l') showLeaderBoard();
-	else if (choice == 'x') exit(0);
+	while (choice != 'n' && choice != 'l' && choice != 'x' && choice != 'N' && choice != 'L' && choice != 'X') {
+		cout << "Invalid input. Please enter 'n', 'l', or 'x': "<< endl;
+		choice = _getch();
+	}
+	if (choice == 'n' || choice == 'N') game();
+	else if (choice == 'l' || choice == 'L') showLeaderBoard();
+	else if (choice == 'x' || choice == 'X') exit(0);
 }
 
 int main() {
