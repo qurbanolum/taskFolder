@@ -12,8 +12,10 @@ const int mapWidth = 60;
 const int mapHeight = 30;
 int mapSize[mapHeight][mapWidth];
 //Snake parameters
-int snakeXpos[mapWidth * mapHeight];
-int snakeYpos[mapWidth * mapHeight];
+struct Coordinates {
+	int X;
+	int Y;
+};
 int snakeMoveDirection;
 int snakeSize = 3;
 int snakeSpeed = 300;
@@ -49,13 +51,13 @@ void deleteFood() {
 	initFood();
 }
 
-void initMap() {
-	snakeXpos[0] = 15;
-	snakeYpos[0] = 30;
-	snakeXpos[1] = 15;
-	snakeYpos[1] = 31;
-	snakeXpos[2] = 15;
-	snakeYpos[2] = 32;
+void initMap(Coordinates snakeCoordinates[]) {
+	snakeCoordinates[0].X = 15;
+	snakeCoordinates[0].Y = 30;
+	snakeCoordinates[1].X = 15;
+	snakeCoordinates[1].Y = 31;
+	snakeCoordinates[2].X = 15;
+	snakeCoordinates[2].Y = 32;
 	for (int i = 0; i < mapHeight; i++) {
 		for (int k = 0; k < mapWidth; k++) {
 			if (i == 0 || i == mapHeight - 1) {
@@ -70,7 +72,7 @@ void initMap() {
 		}
 	}
 	for (int i = 0; i < snakeSize; i++){
-		mapSize[snakeXpos[i]][snakeYpos[i]] = 1;
+		mapSize[snakeCoordinates[i].X][snakeCoordinates[i].Y] = 1;
 	}
 	
 	initFood();
@@ -96,17 +98,17 @@ void showMap() {
 	}
 }
 
-void snakeMove(int xDirection, int yDirection) {
+void snakeMove(int xDirection, int yDirection, Coordinates snakeCoordinates[]) {
 	int tailX;
 	int tailY;
-	tailX = snakeXpos[snakeSize - 1];
-	tailY = snakeYpos[snakeSize - 1];
+	tailX = snakeCoordinates[snakeSize - 1].X;
+	tailY = snakeCoordinates[snakeSize - 1].Y;
 	for (int i = 1; i < snakeSize; i++) {
-		snakeXpos[snakeSize - i] = snakeXpos[snakeSize - (i + 1)];
-		snakeYpos[snakeSize - i] = snakeYpos[snakeSize - (i + 1)];
+		snakeCoordinates[snakeSize - i].X = snakeCoordinates[snakeSize - (i + 1)].X;
+		snakeCoordinates[snakeSize - i].Y = snakeCoordinates[snakeSize - (i + 1)].Y;
 	}
-	snakeXpos[0] = snakeXpos[0] + xDirection;
-	snakeYpos[0] = snakeYpos[0] + yDirection;
+	snakeCoordinates[0].X = snakeCoordinates[0].X + xDirection;
+	snakeCoordinates[0].Y = snakeCoordinates[0].Y + yDirection;
 
 	timeForFood += snakeSpeed;
 	if ((timeForFood % 10000) == 0) {
@@ -116,19 +118,19 @@ void snakeMove(int xDirection, int yDirection) {
 		deleteFood();
 	}
 
-	if (mapSize[snakeXpos[0]][snakeYpos[0]] == -2) {
+	if (mapSize[snakeCoordinates[0].X][snakeCoordinates[0].Y] == -2) {
 		deleteFood();
 		snakeScore += 100;
 		snakeSize++;
 		snakeSpeed = snakeSpeed > 50 ? snakeSpeed - 50 : snakeSpeed;
 	}
-	else if (mapSize[snakeXpos[0]][snakeYpos[0]] != 0) {
+	else if (mapSize[snakeCoordinates[0].X][snakeCoordinates[0].Y] != 0) {
 		snakeIsAlive = false;
 	}
 
 	
 	for (int i = 0; i < snakeSize; i++) {
-		mapSize[snakeXpos[i]][snakeYpos[i]] = 1;
+		mapSize[snakeCoordinates[i].X][snakeCoordinates[i].Y] = 1;
 	}
 	mapSize[tailX][tailY] = 0;
 	
@@ -159,19 +161,19 @@ void changeDirection(char button) {
 	}
 }
 
-void updateGame() {
+void updateGame(Coordinates snakeCoordinates[]) {
 	switch (snakeMoveDirection) {
 	case 1:
-		snakeMove(-1,0);
+		snakeMove(-1,0, snakeCoordinates);
 		break;
 	case 2:
-		snakeMove(0,1);
+		snakeMove(0,1, snakeCoordinates);
 		break;
 	case 3:
-		snakeMove(1,0);
+		snakeMove(1,0, snakeCoordinates);
 		break;
 	case 4:
-		snakeMove(0,-1);
+		snakeMove(0,-1, snakeCoordinates);
 		break;
 	}
 }
@@ -241,14 +243,14 @@ void game() {
 			break;
 	default: snakeSpeed = 300;
 	}
-		
-	initMap();
+	Coordinates snakeCoordinates[100];
+	initMap(snakeCoordinates);
 	snakeIsAlive = true;
 	while (snakeIsAlive) {
 		if (_kbhit()) {
 			changeDirection(_getch());
 		}
-		updateGame();
+		updateGame(snakeCoordinates);
 		cleanScreen();
 		showMap();
 		Sleep(snakeSpeed);

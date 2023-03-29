@@ -153,7 +153,6 @@
     <ClCompile Include="zmeya.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="gameFunc.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
