@@ -8,28 +8,22 @@
 #include<ctime>
 using namespace std;
 //Map parameters
-const int mapWidth = 60;
-const int mapHeight = 30;
-int mapSize[mapHeight][mapWidth];
+int mapSize[30][60];
 //Snake parameters
 struct Coordinates {
 	int X;
 	int Y;
 };
 int snakeMoveDirection;
-int snakeSize = 3;
-int snakeSpeed = 300;
-bool snakeIsAlive;
-int snakeScore = 0;
+int snakeSpeed;
 int leaderBoard[5] = {};
-int timeForFood = 0;
 char mainMenu();
 
 void cleanScreen() {
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),{0,0});
 }
 
-void initFood() {
+void initFood(int mapHeight, int mapWidth) {
 	int x, y;
 	srand(time(NULL));
 	do {
@@ -39,7 +33,7 @@ void initFood() {
 	mapSize[x][y] = -2;
 }
 
-void deleteFood() {
+void deleteFood(int mapHeight,int mapWidth) {
 	for (int i = 0; i < mapHeight; i++) {
 		for (int k = 0; k < mapWidth; k++) {
 			if (mapSize[i][k] == -2) {
@@ -48,10 +42,10 @@ void deleteFood() {
 			}
 		}
 	}
-	initFood();
+	initFood(30,60);
 }
 
-void initMap(Coordinates snakeCoordinates[]) {
+void initMap(Coordinates snakeCoordinates[], int mapHeight, int mapWidth, int * snakeSize) {
 	snakeCoordinates[0].X = 15;
 	snakeCoordinates[0].Y = 30;
 	snakeCoordinates[1].X = 15;
@@ -71,14 +65,14 @@ void initMap(Coordinates snakeCoordinates[]) {
 			}
 		}
 	}
-	for (int i = 0; i < snakeSize; i++){
+	for (int i = 0; i < *snakeSize; i++){
 		mapSize[snakeCoordinates[i].X][snakeCoordinates[i].Y] = 1;
 	}
 	
-	initFood();
+	initFood(30,60);
 }
 
-void showMap() {
+void showMap(int mapHeight,int mapWidth) {
 	for (int i = 0; i < mapHeight; i++) {
 		for (int k = 0; k < mapWidth; k++) {
 			if (mapSize[i][k] == -1) {
@@ -98,38 +92,38 @@ void showMap() {
 	}
 }
 
-void snakeMove(int xDirection, int yDirection, Coordinates snakeCoordinates[]) {
+void snakeMove(int xDirection, int yDirection, Coordinates snakeCoordinates[], int * timeForFood, int* snakeScore, int * snakeSize, bool * snakeIsAlive){
 	int tailX;
 	int tailY;
-	tailX = snakeCoordinates[snakeSize - 1].X;
-	tailY = snakeCoordinates[snakeSize - 1].Y;
-	for (int i = 1; i < snakeSize; i++) {
-		snakeCoordinates[snakeSize - i].X = snakeCoordinates[snakeSize - (i + 1)].X;
-		snakeCoordinates[snakeSize - i].Y = snakeCoordinates[snakeSize - (i + 1)].Y;
+	tailX = snakeCoordinates[*snakeSize - 1].X;
+	tailY = snakeCoordinates[*snakeSize - 1].Y;
+	for (int i = 1; i < *snakeSize; i++) {
+		snakeCoordinates[*snakeSize - i].X = snakeCoordinates[*snakeSize - (i + 1)].X;
+		snakeCoordinates[*snakeSize - i].Y = snakeCoordinates[*snakeSize - (i + 1)].Y;
 	}
 	snakeCoordinates[0].X = snakeCoordinates[0].X + xDirection;
 	snakeCoordinates[0].Y = snakeCoordinates[0].Y + yDirection;
 
-	timeForFood += snakeSpeed;
-	if ((timeForFood % 10000) == 0) {
-		initFood();
+	*timeForFood += snakeSpeed;
+	if ((*timeForFood % 10000) == 0) {
+		initFood(30,60);
 	}
-	else if (((timeForFood % 7000) == 0)) {
-		deleteFood();
+	else if (((*timeForFood % 7000) == 0)) {
+		deleteFood(30,60);
 	}
 
 	if (mapSize[snakeCoordinates[0].X][snakeCoordinates[0].Y] == -2) {
-		deleteFood();
-		snakeScore += 100;
-		snakeSize++;
+		deleteFood(30,60);
+		*snakeScore += 100;
+		*snakeSize = *snakeSize + 1;
 		snakeSpeed = snakeSpeed > 50 ? snakeSpeed - 50 : snakeSpeed;
 	}
 	else if (mapSize[snakeCoordinates[0].X][snakeCoordinates[0].Y] != 0) {
-		snakeIsAlive = false;
+		*snakeIsAlive = false;
 	}
 
 	
-	for (int i = 0; i < snakeSize; i++) {
+	for (int i = 0; i < *snakeSize; i++) {
 		mapSize[snakeCoordinates[i].X][snakeCoordinates[i].Y] = 1;
 	}
 	mapSize[tailX][tailY] = 0;
@@ -161,19 +155,19 @@ void changeDirection(char button) {
 	}
 }
 
-void updateGame(Coordinates snakeCoordinates[]) {
+void updateGame(Coordinates snakeCoordinates[],int * timeForFood, int * snakeScore, int* snakeSize, bool * snakeIsAlive) {
 	switch (snakeMoveDirection) {
 	case 1:
-		snakeMove(-1,0, snakeCoordinates);
+		snakeMove(-1,0, snakeCoordinates, timeForFood, snakeScore, snakeSize, snakeIsAlive);
 		break;
 	case 2:
-		snakeMove(0,1, snakeCoordinates);
+		snakeMove(0,1, snakeCoordinates, timeForFood, snakeScore, snakeSize, snakeIsAlive);
 		break;
 	case 3:
-		snakeMove(1,0, snakeCoordinates);
+		snakeMove(1,0, snakeCoordinates, timeForFood, snakeScore, snakeSize, snakeIsAlive);
 		break;
 	case 4:
-		snakeMove(0,-1, snakeCoordinates);
+		snakeMove(0,-1, snakeCoordinates, timeForFood, snakeScore, snakeSize, snakeIsAlive);
 		break;
 	}
 }
@@ -243,16 +237,19 @@ void game() {
 			break;
 	default: snakeSpeed = 300;
 	}
-	Coordinates snakeCoordinates[100];
-	initMap(snakeCoordinates);
-	snakeIsAlive = true;
+	int timeForFood = 0;
+	int snakeScore = 0;
+	int snakeSize = 3;
+	Coordinates snakeCoordinates[100] = {};
+	initMap(snakeCoordinates,30,60,&snakeSize);
+	bool snakeIsAlive = true;
 	while (snakeIsAlive) {
 		if (_kbhit()) {
 			changeDirection(_getch());
 		}
-		updateGame(snakeCoordinates);
+		updateGame(snakeCoordinates, &timeForFood, &snakeScore, &snakeSize, &snakeIsAlive);
 		cleanScreen();
-		showMap();
+		showMap(30,60);
 		Sleep(snakeSpeed);
 	}
 	addLeader(snakeScore);
@@ -262,6 +259,7 @@ void game() {
 
 
 char mainMenu() {
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), { 0,0 });
 	readLeaderboard(leaderBoard);
 	cout << "Press N to New Game." << endl << "Press L to Leader Board." << endl << "Press X to Exit" << endl;
 	char choice;
