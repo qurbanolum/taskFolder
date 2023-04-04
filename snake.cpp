@@ -1,5 +1,11 @@
 #include "pch.h"
 #include "snake.h"
+
+int mapSize[30][60];
+int snakeMoveDirection;
+int snakeSpeed;
+int leaderBoard[5] = {};
+
 void cleanScreen() {
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), { 0,0 });
 }

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef SNAKE_H
+#define SNAKE_H
 #include<stdlib.h>
 #include "pch.h"
 #include<iostream>
@@ -7,15 +9,17 @@
 #include<random>
 #include<conio.h>
 #include<ctime>
+using namespace std;
 struct Coordinates {
 	int X;
 	int Y;
 };
-int mapSize[30][60];
-int snakeMoveDirection;
-int snakeSpeed;
-int leaderBoard[5] = {};
-using namespace std;
+
+extern int mapSize[30][60];
+extern int snakeMoveDirection;
+extern int snakeSpeed;
+extern int leaderBoard[5];
+
 char mainMenu();
 void cleanScreen();
 void initFood(int mapHeight, int mapWidth);
@@ -31,3 +35,5 @@ void readLeaderboard(int leaderboard[5]);
 void addLeader(int score);
 void game();
 char mainMenu();
+
+#endif
