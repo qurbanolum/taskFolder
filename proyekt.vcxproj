@@ -148,12 +148,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="peregrujenieFunkcii.cpp" />
+    <ClCompile Include="snake.cpp" />
     <ClCompile Include="UkazProstie.cpp" />
     <ClCompile Include="UkazRaznie.cpp" />
     <ClCompile Include="zmeya.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="snake.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
